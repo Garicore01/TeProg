@@ -5,8 +5,6 @@
 #include "nodo.h"
 #include "fichero.h"
 #include "enlace.h"
-#include "arbol_ficheros_error.h"
-#pragma once
 using namespace std;
 
 
@@ -91,13 +89,13 @@ class Shell {
             shared_ptr<Directorio> apuntado;
             vector<string> cadena = parsearString(path);
             string nombre = cadena.back();
-            // Si la longuitud de la cadena es mayor que 1, es que hay que hay que el objetivo a borrar no esta en mi directorio actual.
-            if (cadena.size() > 1) {
-                cadena.pop_back(); // Elimino del vector el ultimo elemento, ya que es el objetivo a borrar y para tener acceso a el necesito parar en el padre.
-                apuntado = dynamic_pointer_cast<Directorio>(comprobarTipoRutas(path)->buscarPuntero(cadena,0)); // Busco el puntero al directorio donde esta el objetivo.
-            } else {
-                apuntado = _directorio;
+            if ((int)cadena.size() > 1) {
+                cadena.pop_back();
             }
-            apuntado -> rm(nombre); // Elimino el objetivo.
+            apuntado = dynamic_pointer_cast<Directorio>(comprobarTipoRutas(path)->buscarPuntero(cadena,0));
+            // Error: apuntado devuelve un puntero no valido.
+            cout << apuntado -> nombre() << "  " << nombre << endl;
+            //apuntado = dynamic_pointer_cast<Directorio>(apuntado->padre());
+            apuntado->rm(nombre);
         }
 }; 

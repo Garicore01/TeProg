@@ -2,6 +2,7 @@
 #include <iostream>
 #include <memory>
 using namespace std;
+#pragma once
 
 class Nodo {
     protected:

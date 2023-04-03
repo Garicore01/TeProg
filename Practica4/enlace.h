@@ -3,6 +3,7 @@
 #include <memory>
 #include "Nodo.h"
 using namespace std;
+#pragma once
 
 class Enlace : public Nodo {
     protected:

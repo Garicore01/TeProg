@@ -33,7 +33,6 @@ class Directorio : public Nodo {
 
         string du (){
             string lista;
-            lista += _nombre + " " + to_string(tamanio()) + "\n";
             for (const auto& [key, value] : _hijos) {
                 lista += (*value).nombre() + " " + to_string((*value).tamanio())+"\n";
             }
@@ -41,19 +40,22 @@ class Directorio : public Nodo {
         }
 
         void vi (string nombre, int contenido) {
-            shared_ptr<Nodo> elemento = _hijos.find(nombre)->second;
-            // Voy al enlace y modifico el contenido del fichero.
-            while(dynamic_pointer_cast<Enlace>(elemento) != nullptr) {
-                shared_ptr<Enlace> Aux = dynamic_pointer_cast<Enlace>(elemento); // Creo un puntero a enlace, para poder acceder a su metodo apuntado.
-                elemento = Aux->apuntado();
-            }
-            if (dynamic_pointer_cast<Fichero>(elemento) != nullptr) { //Entonces es un fichero
-                shared_ptr<Fichero> Aux = dynamic_pointer_cast<Fichero>(elemento); // Creo un puntero a fichero, para poder acceder a su metodo modificarTamanio.
-                Aux->modificarTamanio(contenido);
-            } else { // Entonces es un directorio, por lo que creamos un fichero.
-                //shared_ptr<Fichero> Aux = make_shared<Fichero>(nombre,contenido);
-                Fichero fich(nombre,contenido);
-                //_hijos[nombre] = make_shared<Fichero>(nombre,contenido);
+            auto it = _hijos.find(nombre);
+            if (it == _hijos.end()) { // No existe el fichero, entonces lo creo
+                _hijos[nombre] = make_shared<Fichero>(nombre,contenido);
+            } else {
+                shared_ptr<Nodo> elemento = it->second;
+                // Voy al enlace y modifico el contenido del fichero.
+                while(dynamic_pointer_cast<Enlace>(elemento) != nullptr) {
+                    shared_ptr<Enlace> Aux = dynamic_pointer_cast<Enlace>(elemento); // Creo un puntero a enlace, para poder acceder a su metodo apuntado.
+                    elemento = Aux->apuntado();
+                }
+                if (dynamic_pointer_cast<Fichero>(elemento) != nullptr) { //Entonces es un fichero
+                    shared_ptr<Fichero> Aux = dynamic_pointer_cast<Fichero>(elemento); // Creo un puntero a fichero, para poder acceder a su metodo modificarTamanio.
+                    Aux->modificarTamanio(contenido);
+                } //else { // Caso de excepción.
+                
+                // }
             }
         }
 
@@ -68,19 +70,23 @@ class Directorio : public Nodo {
         }
 
         void rm (string nombre) {
+            // cout << "Me llaman con " << nombre << endl;
+            // // Problema se esta llamando a este metodo desde root, en vez desde el directorio.
+            // cout << this->nombre() << endl; 
             _hijos.erase(nombre);
         }
 
         shared_ptr<Nodo> buscarPuntero (vector<string> cadena,const int i) {
             shared_ptr<Nodo> apuntador;
             apuntador = _hijos.find(cadena[i])->second;
-            if (i != (int)cadena.size()-1)  { 
-                if ( dynamic_pointer_cast<Directorio>(apuntador) != nullptr){
-                    shared_ptr<Directorio> Aux = dynamic_pointer_cast<Directorio>(apuntador); // Creo un puntero a directorio, para poder acceder a su metodo buscarPuntero.
+            int tamanio_v=cadena.size()-1;
+            if (i != tamanio_v)  { 
+                shared_ptr<Directorio> Aux = dynamic_pointer_cast<Directorio>(apuntador); // Creo un puntero a directorio, para poder acceder a su metodo buscarPuntero.
+                if ( Aux != nullptr) {
                     apuntador = Aux->buscarPuntero(cadena,i+1);
-                }else{
+                } //else {
                     //excepcion
-                }
+                //}
             }
             return apuntador; 
         }

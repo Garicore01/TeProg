@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Nodo.h"
 using namespace std;
+#pragma once
 
 class Fichero : public Nodo {
     protected:

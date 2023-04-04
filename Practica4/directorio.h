@@ -6,6 +6,7 @@
 #include "nodo.h"
 #include "fichero.h"
 #include "enlace.h"
+#include "arbol_ficheros_error.h"
 using namespace std;
 
 class Directorio : public Nodo {
@@ -39,10 +40,13 @@ class Directorio : public Nodo {
             return lista;
         }
 
-        void vi (string nombre, int contenido) {
+        void vi (string nombre, int size) {
+            if (size < 0) {
+                throw arbol_ficheros_error_valor_negativo();
+            }
             auto it = _hijos.find(nombre);
             if (it == _hijos.end()) { // No existe el fichero, entonces lo creo
-                _hijos[nombre] = make_shared<Fichero>(nombre,contenido);
+                _hijos[nombre] = make_shared<Fichero>(nombre,size);
             } else {
                 shared_ptr<Nodo> elemento = it->second;
                 // Voy al enlace y modifico el contenido del fichero.
@@ -52,16 +56,20 @@ class Directorio : public Nodo {
                 }
                 if (dynamic_pointer_cast<Fichero>(elemento) != nullptr) { //Entonces es un fichero
                     shared_ptr<Fichero> Aux = dynamic_pointer_cast<Fichero>(elemento); // Creo un puntero a fichero, para poder acceder a su metodo modificarTamanio.
-                    Aux->modificarTamanio(contenido);
-                } //else { // Caso de excepción.
-                
-                // }
+                    Aux->modificarTamanio(size);
+                 } else { // Caso de excepción.
+                    throw arbol_ficheros_error_modificar_elemento_no_valido(nombre);
+                 }
             }
         }
 
         void mkdir (string nombre,shared_ptr<Directorio> padre) {
-            shared_ptr<Directorio> nuevo = make_shared<Directorio>(nombre,padre); // Creamos el directorio.
-            _hijos.insert({nombre,nuevo});
+            if (_hijos.find(nombre) == _hijos.end()) { //Caso de que no existe ya el nombre.
+                shared_ptr<Directorio> nuevo = make_shared<Directorio>(nombre,padre); // Creamos el directorio.
+                _hijos.insert({nombre,nuevo}); 
+            } else {
+                throw arbol_ficheros_error_carpeta_ya_existe(nombre);
+            }
         }
 
         
@@ -70,24 +78,29 @@ class Directorio : public Nodo {
         }
 
         void rm (string nombre) {
-            // cout << "Me llaman con " << nombre << endl;
-            // // Problema se esta llamando a este metodo desde root, en vez desde el directorio.
-            // cout << this->nombre() << endl; 
             _hijos.erase(nombre);
         }
 
         shared_ptr<Nodo> buscarPuntero (vector<string> cadena,const int i) {
-            shared_ptr<Nodo> apuntador;
-            apuntador = _hijos.find(cadena[i])->second;
-            int tamanio_v=cadena.size()-1;
-            if (i != tamanio_v)  { 
-                shared_ptr<Directorio> Aux = dynamic_pointer_cast<Directorio>(apuntador); // Creo un puntero a directorio, para poder acceder a su metodo buscarPuntero.
-                if ( Aux != nullptr) {
-                    apuntador = Aux->buscarPuntero(cadena,i+1);
-                } //else {
-                    //excepcion
-                //}
+            auto buscar = _hijos.find(cadena[i]);
+            if (buscar != _hijos.end()) {
+                shared_ptr<Nodo> apuntador = buscar->second;
+                int tamanio_v = cadena.size()-1;
+                if (i != tamanio_v)  { 
+                    if ( dynamic_pointer_cast<Directorio>(apuntador) != nullptr) {
+                        apuntador = dynamic_pointer_cast<Directorio>(apuntador)->buscarPuntero(cadena,i+1);
+                    } else {
+                        throw arbol_ficheros_error_elemento_no_es_carpeta(cadena[i]);
+                    }
+                } else if ( dynamic_pointer_cast<Directorio>(apuntador) == nullptr) {
+                        throw arbol_ficheros_error_elemento_no_es_carpeta(cadena[i]);
+                }
+                return apuntador;
+            } else {
+                throw arbol_ficheros_error_elemento_no_existe("La ruta"+cadena[i]);
             }
-            return apuntador; 
         }
+
 };
+
+        

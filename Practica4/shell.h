@@ -23,7 +23,7 @@ class Shell {
             if (path[0] == '/' ){
                 getline(input_stringstream, lectura, '/'); // Consumo el primer "/"
             }
-            while (getline(input_stringstream, lectura, '/')){ //No sabemos como son las rutas, preguntar
+            while (getline(input_stringstream, lectura, '/')){
                 cadena.push_back(lectura);
             }
             return cadena;
@@ -46,6 +46,10 @@ class Shell {
         string pwd() {
             string ruta = "";
             shared_ptr<Nodo> apuntado = _directorio;
+            if (apuntado->padre() != nullptr) {
+                ruta = apuntado->nombre() + ruta;
+                apuntado = apuntado -> padre();
+            }
             while (apuntado->padre() != nullptr){
                 ruta = apuntado->nombre() + "/" + ruta;
                 apuntado = apuntado -> padre();
@@ -67,6 +71,9 @@ class Shell {
         }
         void cd(string path) {
             if (path=="..") {
+                if ((*_directorio).padre() == nullptr){
+                   throw arbol_ficheros_error_ruta_ya_en_root(path);
+                }
                 _directorio = dynamic_pointer_cast<Directorio>((*_directorio).padre());
             }
             else {
@@ -76,9 +83,9 @@ class Shell {
             }
         }
         void ln (string path, string name) {
-            // Parseamos la string
             shared_ptr<Nodo> apuntado;
-            apuntado = _root->buscarPuntero(parsearString(path),0); // Caso de Excepción.
+            // Parseamos la string y buscamos el puntero al nodo.
+            apuntado = _root->buscarPuntero(parsearString(path),0);
             shared_ptr<Enlace> enlace = make_shared<Enlace>(name,apuntado);
             _directorio->anyadir(enlace);
         }

@@ -1,3 +1,10 @@
+/* 
+* Nombre y Apellido: Gari Arellano Zubía y Alain Cascán Zalewska
+* NIP: 848905 y 849183
+* Asignatura: Tecnología de la Programación
+* Fecha: 10/04/2023
+* Practica 4: directorio.h             
+*/
 #pragma once
 #include <iostream>
 #include <string>
@@ -9,20 +16,27 @@
 #include "arbol_ficheros_error.h"
 using namespace std;
 
+/*
+Clase Directorio, que hereda de la clase Nodo.
+Esta clase representa un directorio, que puede contener ficheros, enlaces y otros directorios.
+*/
 class Directorio : public Nodo {
     protected:
-        map<string,shared_ptr<Nodo>> _hijos;
+        map<string,shared_ptr<Nodo>> _hijos; // Diccionario de punteros a nodos, que contiene los hijos del directorio.
 
     public:
         Directorio(string nombre,shared_ptr<Directorio> padre) : Nodo(nombre,padre), _hijos(){}
 
-        int tamanio () const override{ 
+        
+        // Método que devuelve el tamañio del directorio.
+        int tamanio () const override { 
             int tamanio = 0;
             for (const auto& [key, value] : _hijos) {
                 tamanio += (*value).tamanio();
             }
             return tamanio;
         }
+        // Método que devuelve un string con el listado de los hijos del directorio.
         string ls (){
             string lista;
             //lista += _nombre + "\n";
@@ -31,7 +45,7 @@ class Directorio : public Nodo {
             }
             return lista;
         }
-
+        // Método que devuelve un string con el listado de los hijos del directorio, junto con su tamaño.
         string du (){
             string lista;
             for (const auto& [key, value] : _hijos) {
@@ -39,7 +53,7 @@ class Directorio : public Nodo {
             }
             return lista;
         }
-
+        // Método que modifica el tamaño de un fichero con nombre <nombre>, si existe, sino crea un nuevo fichero con ese nombre y tamaño.
         void vi (string nombre, int size) {
             if (size < 0) {
                 throw arbol_ficheros_error_valor_negativo();
@@ -62,7 +76,7 @@ class Directorio : public Nodo {
                  }
             }
         }
-
+        // Método que crea un nuevo directorio con nombre <nombre>.
         void mkdir (string nombre,shared_ptr<Directorio> padre) {
             if (_hijos.find(nombre) == _hijos.end()) { //Caso de que no existe ya el nombre.
                 shared_ptr<Directorio> nuevo = make_shared<Directorio>(nombre,padre); // Creamos el directorio.
@@ -72,15 +86,15 @@ class Directorio : public Nodo {
             }
         }
 
-        
+        // Método que añade un hijo al directorio.
         void anyadir (shared_ptr<Enlace> enlace) {
             _hijos.insert({enlace->nombre(),enlace});
         }
-
+        // Método que elimina un hijo del directorio.
         void rm (string nombre) {
             _hijos.erase(nombre);
         }
-
+        // Método que devuelve un puntero al hijo con nombre <nombre>.
         shared_ptr<Nodo> buscarPuntero (vector<string> cadena,const int i) {
             auto buscar = _hijos.find(cadena[i]);
             if (buscar != _hijos.end()) {
@@ -97,10 +111,17 @@ class Directorio : public Nodo {
                 }
                 return apuntador;
             } else {
-                throw arbol_ficheros_error_elemento_no_existe("La ruta"+cadena[i]);
+                throw arbol_ficheros_error_elemento_no_existe("La ruta " + cadena[i] + " no existe.");
             }
         }
 
+        int stat (string nombre) {
+            if (nombre == _nombre) {
+                return tamanio();
+            } else {
+                return _hijos[nombre]->tamanio();
+            }
+        }
 };
 
         

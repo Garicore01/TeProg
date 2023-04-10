@@ -1,9 +1,19 @@
+/* 
+* Nombre y Apellido: Gari Arellano Zubía y Alain Cascán Zalewska
+* NIP: 848905 y 849183
+* Asignatura: Tecnología de la Programación
+* Fecha: 10/04/2023
+* Practica 4: nodo.h             
+*/
 #pragma once
 #include <iostream>
 #include <memory>
 using namespace std;
 #pragma once
 
+/*Clase Nodo
+Clase abstracta pura nodo la cual reprenta un elemento en un sistema de archivos y hace de padre de las clases Archivo y Directorio y Enlace
+*/
 class Nodo {
     protected:
         string _nombre;

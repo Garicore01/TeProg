@@ -95,7 +95,7 @@ class Directorio : public Nodo {
             _hijos.erase(nombre);
         }
         // Método que devuelve un puntero al hijo con nombre <nombre>.
-        shared_ptr<Nodo> buscarPuntero (vector<string> cadena,const int i) {
+        /*shared_ptr<Nodo> buscarPuntero (vector<string> cadena,const int i) {
             auto buscar = _hijos.find(cadena[i]);
             if (buscar != _hijos.end()) {
                 shared_ptr<Nodo> apuntador = buscar->second;
@@ -108,6 +108,24 @@ class Directorio : public Nodo {
                     }
                 } else if ( dynamic_pointer_cast<Directorio>(apuntador) == nullptr) {
                         throw arbol_ficheros_error_elemento_no_es_carpeta(cadena[i]);
+                }
+                return apuntador;
+            } else {
+                throw arbol_ficheros_error_elemento_no_existe("La ruta " + cadena[i] + " no existe.");
+            }
+        }*/
+
+        shared_ptr<Nodo> buscarPuntero (vector<string> cadena,const int i) {
+            auto buscar = _hijos.find(cadena[i]);
+            if (buscar != _hijos.end()) {
+                shared_ptr<Nodo> apuntador = buscar->second;
+                int tamanio_v = cadena.size();
+                if (i != tamanio_v)  { 
+                    if ( dynamic_pointer_cast<Directorio>(apuntador) != nullptr) {
+                        apuntador = dynamic_pointer_cast<Directorio>(apuntador)->buscarPuntero(cadena,i+1);
+                    } else {
+                        throw arbol_ficheros_error_elemento_no_es_carpeta(cadena[i]);
+                    }
                 }
                 return apuntador;
             } else {

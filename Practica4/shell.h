@@ -104,8 +104,10 @@ class Shell {
             if (cadena.size() > 1) {
                 cadena.pop_back(); // Elimino del vector el ultimo elemento, ya que es el objetivo a borrar y para tener acceso a el necesito parar en el padre.
                 apuntado = dynamic_pointer_cast<Directorio>(comprobarTipoRutas(path)->buscarPuntero(cadena,0)); // Busco el puntero al directorio donde esta el objetivo.
-            } else {
+            } else if (cadena[0] == _directorio->nombre()) {
                 apuntado = _directorio;
+            } else {
+                apuntado = _directorio->buscarPuntero(cadena,0);
             }
             // Parseamos la string y buscamos el puntero al nodo.
             shared_ptr<Enlace> enlace = make_shared<Enlace>(name,apuntado);

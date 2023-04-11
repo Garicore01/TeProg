@@ -54,13 +54,13 @@ class Directorio : public Nodo {
             return lista;
         }
         // Método que modifica el tamaño de un fichero con nombre <nombre>, si existe, sino crea un nuevo fichero con ese nombre y tamaño.
-        void vi (string nombre, int size) {
+        void vi (string nombre, int size,shared_ptr<Directorio> padre) {
             if (size < 0) {
                 throw arbol_ficheros_error_valor_negativo();
             }
             auto it = _hijos.find(nombre);
             if (it == _hijos.end()) { // No existe el fichero, entonces lo creo
-                _hijos[nombre] = make_shared<Fichero>(nombre,size);
+                _hijos[nombre] = make_shared<Fichero>(nombre,size,padre);
             } else {
                 shared_ptr<Nodo> elemento = it->second;
                 // Voy al enlace y modifico el contenido del fichero.
@@ -95,7 +95,7 @@ class Directorio : public Nodo {
             _hijos.erase(nombre);
         }
         // Método que devuelve un puntero al hijo con nombre <nombre>.
-        /*shared_ptr<Nodo> buscarPuntero (vector<string> cadena,const int i) {
+        shared_ptr<Nodo> buscarPuntero (vector<string> cadena,const int i) {
             auto buscar = _hijos.find(cadena[i]);
             if (buscar != _hijos.end()) {
                 shared_ptr<Nodo> apuntador = buscar->second;
@@ -106,26 +106,6 @@ class Directorio : public Nodo {
                     } else {
                         throw arbol_ficheros_error_elemento_no_es_carpeta(cadena[i]);
                     }
-                } else if ( dynamic_pointer_cast<Directorio>(apuntador) == nullptr) {
-                        throw arbol_ficheros_error_elemento_no_es_carpeta(cadena[i]);
-                }
-                return apuntador;
-            } else {
-                throw arbol_ficheros_error_elemento_no_existe("La ruta " + cadena[i] + " no existe.");
-            }
-        }*/
-
-        shared_ptr<Nodo> buscarPuntero (vector<string> cadena,const int i) {
-            auto buscar = _hijos.find(cadena[i]);
-            if (buscar != _hijos.end()) {
-                shared_ptr<Nodo> apuntador = buscar->second;
-                int tamanio_v = cadena.size();
-                if (i != tamanio_v)  { 
-                    if ( dynamic_pointer_cast<Directorio>(apuntador) != nullptr) {
-                        apuntador = dynamic_pointer_cast<Directorio>(apuntador)->buscarPuntero(cadena,i+1);
-                    } else {
-                        throw arbol_ficheros_error_elemento_no_es_carpeta(cadena[i]);
-                    }
                 }
                 return apuntador;
             } else {
@@ -133,13 +113,6 @@ class Directorio : public Nodo {
             }
         }
 
-        int stat (string nombre) {
-            if (nombre == _nombre) {
-                return tamanio();
-            } else {
-                return _hijos[nombre]->tamanio();
-            }
-        }
 };
 
         

@@ -76,7 +76,7 @@ class Shell {
             return _directorio->du();
         }
         void vi(string name,int size) {
-            _directorio->vi(name,size);
+            _directorio->vi(name,size,_directorio);
         }
         void mkdir(string name) {
             _directorio->mkdir(name,_directorio);
@@ -85,37 +85,36 @@ class Shell {
         // Método encargado de cambiar de directorio con todas sus posibilidades
         void cd(string path) {
             if (path=="..") {
-                if ((*_directorio).padre() == nullptr){
+                if (_directorio->padre() == nullptr) {
                    throw arbol_ficheros_error_ruta_ya_en_root(path);
                 }
-                _directorio = dynamic_pointer_cast<Directorio>((*_directorio).padre());
-            }
-            else {
-                shared_ptr<Directorio> apuntado;
-                apuntado = dynamic_pointer_cast<Directorio>(comprobarTipoRutas(path)->buscarPuntero(parsearString(path),0));
-                _directorio = apuntado;
+                _directorio = dynamic_pointer_cast<Directorio>(_directorio->padre());
+            } else {
+                shared_ptr<Nodo> apuntado;
+                apuntado = comprobarTipoRutas(path)->buscarPuntero(parsearString(path),0);
+                if (dynamic_pointer_cast<Directorio>(apuntado) != nullptr) {
+                    _directorio = dynamic_pointer_cast<Directorio>(apuntado);
+                } else {
+                    throw arbol_ficheros_error_elemento_no_es_carpeta(path);
+                }
             }
         }
         //Método encargado de crear un enlace en el directorio actual.
         void ln (string path, string name) {
             shared_ptr<Nodo> apuntado;
             vector<string> cadena = parsearString(path);
-            string nombre = cadena.back();
-            if (cadena.size() > 1) {
-                cadena.pop_back(); // Elimino del vector el ultimo elemento, ya que es el objetivo a borrar y para tener acceso a el necesito parar en el padre.
-                apuntado = dynamic_pointer_cast<Directorio>(comprobarTipoRutas(path)->buscarPuntero(cadena,0)); // Busco el puntero al directorio donde esta el objetivo.
-            } else if (cadena[0] == _directorio->nombre()) {
+            if (cadena[0] == _directorio->nombre() and cadena.size() == 1) { // Si el objetivo es el directorio actual, me ahorro una llamada a buscarPuntero.
                 apuntado = _directorio;
             } else {
-                apuntado = _directorio->buscarPuntero(cadena,0);
+                apuntado = comprobarTipoRutas(path)->buscarPuntero(cadena,0); // Busco el puntero al objetivo.
             }
-            // Parseamos la string y buscamos el puntero al nodo.
+            // Creamos el enlace y lo añadimos al directorio actual.
             shared_ptr<Enlace> enlace = make_shared<Enlace>(name,apuntado);
             _directorio->anyadir(enlace);
         }
 
         //Método encargado de mostrar el tamaño del nodo apuntado por el parametro path.
-        int stat (string path) {
+        /*int stat (string path) {
             shared_ptr<Nodo> apuntado;
             vector<string> cadena = parsearString(path);
             string nombre = cadena.back();
@@ -126,10 +125,16 @@ class Shell {
                 apuntado = _directorio;
             }
             return dynamic_pointer_cast<Directorio>(apuntado)->stat(nombre);
+        }*/
+        int stat (string path) {
+            shared_ptr<Nodo> apuntado;
+            vector<string> cadena = parsearString(path);
+            apuntado = comprobarTipoRutas(path)->buscarPuntero(cadena,0);
+            return apuntado->tamanio();
         }
 
         //Método encargado de eliminar el nodo apuntado por el parametro path.
-        void rm (string path) { 
+        /*void rm (string path) { 
             shared_ptr<Directorio> apuntado;
             vector<string> cadena = parsearString(path);
             string nombre = cadena.back();
@@ -140,6 +145,15 @@ class Shell {
             } else {
                 apuntado = _directorio;
             }
+            apuntado -> rm(nombre); // Elimino el objetivo.
+        }*/
+        void rm (string path) { 
+            shared_ptr<Directorio> apuntado;
+            shared_ptr<Nodo> objetivo;
+            vector<string> cadena = parsearString(path);
+            string nombre = cadena.back();
+            objetivo = comprobarTipoRutas(path)->buscarPuntero(cadena,0);
+            apuntado = dynamic_pointer_cast<Directorio>(objetivo->padre());
             apuntado -> rm(nombre); // Elimino el objetivo.
         }
 }; 

@@ -20,7 +20,7 @@ class Fichero : public Nodo {
         int _tamanio;
 
     public:
-        Fichero(string nombre, int tamanio) : Nodo(nombre,nullptr), _tamanio(tamanio) {}
+        Fichero(string nombre, int tamanio, shared_ptr<Nodo> padre) : Nodo(nombre,padre), _tamanio(tamanio) { }
         void modificarTamanio(int tamanio) {
             _tamanio = tamanio;
         }

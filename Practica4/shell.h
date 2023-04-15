@@ -114,18 +114,6 @@ class Shell {
         }
 
         //Método encargado de mostrar el tamaño del nodo apuntado por el parametro path.
-        /*int stat (string path) {
-            shared_ptr<Nodo> apuntado;
-            vector<string> cadena = parsearString(path);
-            string nombre = cadena.back();
-            if (cadena.size() > 1) {
-                cadena.pop_back(); // Elimino del vector el ultimo elemento, ya que es el objetivo a borrar y para tener acceso a el necesito parar en el padre.
-                apuntado = comprobarTipoRutas(path)->buscarPuntero(cadena,0); // Busco el puntero al directorio donde esta el objetivo.
-            } else {
-                apuntado = _directorio;
-            }
-            return dynamic_pointer_cast<Directorio>(apuntado)->stat(nombre);
-        }*/
         int stat (string path) {
             shared_ptr<Nodo> apuntado;
             vector<string> cadena = parsearString(path);
@@ -134,19 +122,6 @@ class Shell {
         }
 
         //Método encargado de eliminar el nodo apuntado por el parametro path.
-        /*void rm (string path) { 
-            shared_ptr<Directorio> apuntado;
-            vector<string> cadena = parsearString(path);
-            string nombre = cadena.back();
-            // Si la longuitud de la cadena es mayor que 1, es que hay que hay que el objetivo a borrar no esta en mi directorio actual.
-            if (cadena.size() > 1) {
-                cadena.pop_back(); // Elimino del vector el ultimo elemento, ya que es el objetivo a borrar y para tener acceso a el necesito parar en el padre.
-                apuntado = dynamic_pointer_cast<Directorio>(comprobarTipoRutas(path)->buscarPuntero(cadena,0)); // Busco el puntero al directorio donde esta el objetivo.
-            } else {
-                apuntado = _directorio;
-            }
-            apuntado -> rm(nombre); // Elimino el objetivo.
-        }*/
         void rm (string path) { 
             shared_ptr<Directorio> apuntado;
             shared_ptr<Nodo> objetivo;

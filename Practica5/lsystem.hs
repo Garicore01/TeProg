@@ -8,11 +8,11 @@ module Lsystem where
 -- Axioma: F
 -- Distancia: 1
 -- Angulo: 60 grados
--- rulesArrowhead :: Char -> String
--- rulesArrowhead 'F' = "F+F--F+F"
--- rulesArrowhead '+' = "+"
--- rulesArrowhead '-' = "-"
--- rulesArrowhead _ = ""
+rulesCurvaKoch :: Char -> String
+rulesCurvaKoch 'F' = "F+F--F+F"
+rulesCurvaKoch '+' = "+"
+rulesCurvaKoch '-' = "-"
+rulesCurvaKoch _ = ""
 
 
 
@@ -23,11 +23,11 @@ module Lsystem where
 -- Distancia: 1
 -- Angulo: 90 grados
 
--- rulesArrowhead :: Char -> String
--- rulesArrowhead 'F' = "F+F-F-F+F"
--- rulesArrowhead '+' = "+"
--- rulesArrowhead '-' = "-"
--- rulesArrowhead _ = ""
+rulesCurvaKochCuadrada :: Char -> String
+rulesCurvaKochCuadrada 'F' = "F+F-F-F+F"
+rulesCurvaKochCuadrada '+' = "+"
+rulesCurvaKochCuadrada '-' = "-"
+rulesCurvaKochCuadrada _ = ""
 
 
 
@@ -37,12 +37,11 @@ module Lsystem where
 -- Distancia: 1
 -- Angulo: 60 grados
 
--- rulesArrowhead :: Char -> String
--- rulesArrowhead 'F' = "F-F++F-F"
--- rulesArrowhead '+' = "+"
--- rulesArrowhead '-' = "-"
--- rulesArrowhead _ = ""
-
+rulesKochSnowflake :: Char -> String
+rulesKochSnowflake 'F' = "F-F++F-F"
+rulesKochSnowflake '+' = "+"
+rulesKochSnowflake '-' = "-"
+rulesKochSnowflake _ = ""
 
 
 
@@ -52,12 +51,22 @@ module Lsystem where
 -- Distancia: 1
 -- Angulo: 60 grados
 
--- rulesArrowhead :: Char -> String
--- rulesArrowhead 'F' = "F+F--F+F"
--- rulesArrowhead '+' = "+"
--- rulesArrowhead '-' = "-"
--- rulesArrowhead _ = ""
+rulesAntiSnowflake :: Char -> String
+rulesAntiSnowflake 'F' = "F+F--F+F"
+rulesAntiSnowflake '+' = "+"
+rulesAntiSnowflake '-' = "-"
+rulesAntiSnowflake _ = ""
 
+-- Isla de Minkowski
+-- Reglas: F -> F+F-F-FF+F+F-FF
+-- Axioma: F+F+F+F
+-- Distancia: 1
+-- Angulo: 90 grados
+rulesIslaMinkowski :: Char -> String
+rulesIslaMinkowski 'F' = "F+F-F-FF+F+F-FF"
+rulesIslaMinkowski '+' = "+"
+rulesIslaMinkowski '-' = "-"
+rulesIslaMinkowski _ = ""
 
 
 
@@ -68,12 +77,12 @@ module Lsystem where
 -- Distancia: 1
 -- Angulo: 120 grados
 
--- rulesArrowhead :: Char -> String
--- rulesArrowhead 'F' = "F-G+F+G-F"
--- rulesArrowhead 'G' = "GG"
--- rulesArrowhead '+' = "+"
--- rulesArrowhead '-' = "-"
--- rulesArrowhead _ = ""
+rulesSierpinsky :: Char -> String
+rulesSierpinsky 'F' = "F-G+F+G-F"
+rulesSierpinsky 'G' = "GG"
+rulesSierpinsky '+' = "+"
+rulesSierpinsky '-' = "-"
+rulesSierpinsky _ = ""
 
 
 
@@ -84,12 +93,12 @@ module Lsystem where
 -- Distancia: 1
 -- Angulo: 60 grados
 
--- rulesArrowhead :: Char -> String
--- rulesArrowhead 'F' = "G-F-G"
--- rulesArrowhead 'G' = "F+G+F"
--- rulesArrowhead '+' = "+"
--- rulesArrowhead '-' = "-"
--- rulesArrowhead _ = ""
+rulesArrowhead :: Char -> String
+rulesArrowhead 'F' = "G-F-G"
+rulesArrowhead 'G' = "F+G+F"
+rulesArrowhead '+' = "+"
+rulesArrowhead '-' = "-"
+rulesArrowhead _ = ""
 
 
 
@@ -101,12 +110,13 @@ module Lsystem where
 -- Distancia: 1
 -- Angulo: 90 grados
 
-rulesArrowhead :: Char -> String
-rulesArrowhead 'f' = "-g>+f>f+>g-"
-rulesArrowhead 'g' = "+f>-g>g->f+"
-rulesArrowhead '+' = "+"
-rulesArrowhead '-' = "-"
-rulesArrowhead _ = ""
+rulesHilbert :: Char -> String
+rulesHilbert 'f' = "-g>+f>f+>g-"
+rulesHilbert 'g' = "+f>-g>g->f+"
+rulesHilbert '+' = "+"
+rulesHilbert '-' = "-"
+rulesHilbert '>' = ">"
+rulesHilbert _ = ""
 
 
 -- Curva de Gosper
@@ -116,12 +126,12 @@ rulesArrowhead _ = ""
 -- Distancia: 1
 -- Angulo: 60 grados
 
--- rulesArrowhead :: Char -> String
--- rulesArrowhead 'F' = "F-G--G+F++FF+G-"
--- rulesArrowhead 'G' = "+F-GG--G-F++F+G"
--- rulesArrowhead '+' = "+"
--- rulesArrowhead '-' = "-"
--- rulesArrowhead _ = ""
+rulesGosper :: Char -> String
+rulesGosper 'F' = "F-G--G+F++FF+G-"
+rulesGosper 'G' = "+F-GG--G-F++F+G"
+rulesGosper '+' = "+"
+rulesGosper '-' = "-"
+rulesGosper _ = ""
 
 
 

@@ -1,2 +1,5 @@
-data arbolBinario a = leaf | nodo (arbolBinario a) a (arbolBinario a)
- 
+-- Gari Arellano 848905
+-- Alain Cascan 849183
+module BinaryTree where
+data BinaryTree a = Null | Branch a (Tree a) (Tree a)
+empty -> tree

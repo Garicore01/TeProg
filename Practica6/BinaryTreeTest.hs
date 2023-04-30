@@ -7,24 +7,24 @@ tree2  = build ["Adolfo","Diego","Juan","Pedro","Tomas"]
 tree3  = build [1..6]
 
 main = do
-  print $ size tree0
-  print tree0
-  print $ preorder tree0
-  print $ postorder tree0
-  print $ inorder tree0
+  -- print $ size tree0
+  -- print tree0
+  -- print $ preorder tree0
+  -- print $ postorder tree0
+  -- print $ inorder tree0
 
   print tree1a
   print $ inorder tree1a
   print $ balance tree1a
   print $ between tree1a 2 4
-  print tree1b
-  print $ inorder tree1b
-  print $ balance tree1b
-  print $ between tree1b 2 4
+  -- print tree1b
+  -- print $ inorder tree1b
+  -- print $ balance tree1b
+  -- print $ between tree1b 2 4
 
-  print tree2
-  print $ balance tree2
-  print $ inorder.balance $ tree2
+  -- print tree2
+  -- print $ balance tree2
+  -- print $ inorder.balance $ tree2
 
-  print tree3
-  print $ balance tree3
+  -- print tree3
+  -- print $ balance tree3

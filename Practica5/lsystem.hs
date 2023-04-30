@@ -134,16 +134,13 @@ rulesGosper '-' = "-"
 rulesGosper _ = ""
 
 
-
-
-
-
-
+-- Funciones a implementar
+-- ----------------------------------------------------------------------------------------
 evaluate :: (Char -> String) -> String -> String
 evaluate _ "" = ""
-evaluate f (s:rest) = (f s) ++ evaluate f rest
+evaluate f (s:rest) = (f s) ++ evaluate f rest -- Nos llamamos recursivamente hasta acabar la string.
 
 lsystem :: (Char -> String) -> String -> Int -> String
 lsystem _ s 0 = s -- Si la distancia es 0, entonces devuelvo la misma string que me pasan
 lsystem _ "" _ = "" -- Si la string es vacia, devuelvo vacio
-lsystem f s n = lsystem f (evaluate f s) (n-1)
+lsystem f s n = lsystem f (evaluate f s) (n-1) -- Nos llamaos recursivamente <n> veces
